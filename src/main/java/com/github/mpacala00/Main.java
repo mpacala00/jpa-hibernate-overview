@@ -1,5 +1,6 @@
 package com.github.mpacala00;
 
+import com.github.mpacala00.entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -17,6 +18,13 @@ public class Main {
             //all changes to entities will be synchronized with database after getTransaction().commit()
             entityManager.getTransaction().begin();
             //put operations on entities here:
+            Product product = new Product();
+            product.setId(1L);
+            product.setName("Some product");
+
+            // persist() -> add this to the context
+            // NOT AN INSERT
+            entityManager.persist(product);
 
             entityManager.getTransaction().commit();
         } finally {
