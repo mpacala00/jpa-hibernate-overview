@@ -12,6 +12,9 @@ import java.util.HashMap;
 
 public class Main {
     public static void main(String[] args) {
+        // when working whit any ORM you never directly work with database,
+        //  you are working with the context
+        // context - collection of instances of entities
 
         // obtaining EntityManagerFactory while using persistence.xml for config
         //EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("my-persistence-unit");

@@ -12,12 +12,15 @@ import java.util.List;
 import java.util.Properties;
 
 // a class defining everything that can be put inside persistence.xml
+// all the values would typically be read from some properties file
+//  based on app's environment etc.
 public class PersistenceUnitInfo implements jakarta.persistence.spi.PersistenceUnitInfo {
     @Override
     public String getPersistenceUnitName() {
         return "my-persistence-unit";
     }
 
+    // provider of persistence: implementation of JPA specification
     @Override
     public String getPersistenceProviderClassName() {
         return "org.hibernate.jpa.HibernatePersistenceProvider";
@@ -39,6 +42,11 @@ public class PersistenceUnitInfo implements jakarta.persistence.spi.PersistenceU
     }
 
     @Override
+    public List<String> getManagedClassNames() {
+        return List.of("com.github.mpacala00.entity.Product");
+    }
+
+    @Override
     public DataSource getNonJtaDataSource() {
         return null;
     }
@@ -56,11 +64,6 @@ public class PersistenceUnitInfo implements jakarta.persistence.spi.PersistenceU
     @Override
     public URL getPersistenceUnitRootUrl() {
         return null;
-    }
-
-    @Override
-    public List<String> getManagedClassNames() {
-        return List.of("com.github.mpacala00.entity.Product");
     }
 
     @Override
