@@ -1,4 +1,4 @@
-package com.github.mpacala00.entity;
+package com.github.mpacala00.lesson2.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

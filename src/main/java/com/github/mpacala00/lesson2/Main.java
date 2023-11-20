@@ -1,12 +1,9 @@
-package com.github.mpacala00;
+package com.github.mpacala00.lesson2;
 
-import com.github.mpacala00.entity.Employee;
-import com.github.mpacala00.entity.Product;
-import com.github.mpacala00.persistence.PersistenceUnitInfo;
+import com.github.mpacala00.lesson2.entity.Employee;
+import com.github.mpacala00.lesson2.persistence.PersistenceUnitInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.PersistenceUnit;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
 import java.util.HashMap;
@@ -16,53 +13,23 @@ public class Main {
         // when working whit any ORM you never directly work with database,
         //  you are working with the context
         // context - collection of instances of entities
-
-        // obtaining EntityManagerFactory while using persistence.xml for config
-        //EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("my-persistence-unit");
+        // Obtaining EntityManager through PersistenceUnitInfo config class:
         EntityManagerFactory entityManagerFactory = new HibernatePersistenceProvider()
-                .createContainerEntityManagerFactory(new PersistenceUnitInfo(), new HashMap<>()); // empty hashmap -> no parameters
+                .createContainerEntityManagerFactory(new PersistenceUnitInfo(), new HashMap<>());
+        // empty hashmap -> no parameters
 
-        // through entityManager you operate on Hibernate context
-        //  it represents the context
         // usually we use 1 entityManagerFactory, but we can create multiple
-        //  entity managers
+        //  entity managers; they represent the context
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            //all changes to entities will be synchronized with database after getTransaction().commit()
             entityManager.getTransaction().begin();
-            //put operations on entities here:
-            Product product = new Product();
-//            product.setId(1L);
-//            product.setName("Some product");
-            product.setId(2L);
-            product.setName("Other product");
-
-            // persist() -> add this to the context
-            // NOT AN INSERT
-            entityManager.persist(product);
-
-            entityManager.getTransaction().commit();
-        } finally {
-            // clear persistence context; detach all entities from the context
-            entityManager.clear();
-        }
-
-        getEntityByPrimaryKey(entityManagerFactory);
-    }
-
-    public static void getEntityByPrimaryKey(EntityManagerFactory emf) {
-        EntityManager em = emf.createEntityManager();
-
-        // remember to include entity classes in PersistenceUnitInfo: Employee
-        try {
-            em.getTransaction().begin();
 
             // to find something in the database use find()
             // instance of employee will be automatically part of the context after it is fetched from database
             //  which means when we try to find the same entity, no query will be executed
             //  but taken from the context
-            Employee e1 = em.find(Employee.class, 1);
+            Employee e1 = entityManager.find(Employee.class, 1);
             System.out.println(e1);
 
             // in this example we set a new value for employee
@@ -70,7 +37,7 @@ public class Main {
             //  despite no save / insert / persist operation being done
             // in any JPA implementation there is no such thing as update
             // at the end of the transaction the context is mirrored to database
-            Employee e2 = em.find(Employee.class, 1);
+            Employee e2 = entityManager.find(Employee.class, 1);
             e2.setName("mpacala");
             System.out.println(e1);
 
@@ -82,12 +49,12 @@ public class Main {
             // another example:
             // nothing will be removed from the database
             // no data have changed
-            em.remove(e1);
+            entityManager.remove(e1);
             Employee e3 = new Employee();
             e3.setId(1);
             e3.setName("mpacala");
             e3.setAddress("Some street 2");
-            em.persist(e3);
+            entityManager.persist(e3);
 
             // overview of all EM operations:
             /*
@@ -109,13 +76,14 @@ public class Main {
             //  does not make it part of the context
             // if something is not in the context, the Hibernate does not see it
 
-            em.merge(e4);
             // but with merge operation, it will replace existing employee of id=1 in the database
             //  (if the transaction would end right after and nothing more was changed)
+            entityManager.merge(e4);
 
-            em.getTransaction().commit(); // end of transaction
+            entityManager.getTransaction().commit(); // end of transaction
         } finally {
-            em.close();
+            // clear persistence context; detach all entities from the context
+            entityManager.clear();
         }
     }
 }

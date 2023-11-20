@@ -1,4 +1,4 @@
-package com.github.mpacala00.entity;
+package com.github.mpacala00.lesson1.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
