@@ -45,7 +45,7 @@ public class PersistenceUnitInfo implements jakarta.persistence.spi.PersistenceU
     public List<String> getManagedClassNames() {
         return List.of(
                 "com.github.mpacala00.lesson1.entity.Product",
-                "com.github.mpacala00.entity.Employee"
+                "com.github.mpacala00.lesson2.entity.Employee"
         );
     }
 
